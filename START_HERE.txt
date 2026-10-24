@@ -1,0 +1,54 @@
+AREZZO GOLD STUDIO - GITHUB PAGES UPLOAD PACKAGE
+Approved app: version 1.1.1. The app code, styling, pricing rules, and feed logic are unchanged.
+
+STATUS
+Prepared locally only. No repository was created. No files were uploaded to GitHub.
+No website has been published by ChatGPT.
+The connected account checked in this conversation was NotStark07.
+The GitHub connector available in this chat has read tools, not upload or publishing tools.
+
+PRIVACY - READ BEFORE PUBLISHING
+The user previously requested restricted access. Ordinary personal-account GitHub Pages is public.
+Do NOT enable public publishing until the owner explicitly approves public access.
+A private repository does not make a Pages website private. GitHub-native private Pages requires
+an eligible organization using GitHub Enterprise Cloud. A hidden URL is not authentication.
+Public publishing exposes the calculator and its built-in pricing assumptions, including
+its default supplier premium. No customer records or inventory CSVs are in this package.
+This is NOT a sign-in-protected app.
+
+PUBLIC GITHUB PAGES PATH - ONLY AFTER PUBLIC ACCESS IS APPROVED
+1. Sign in to the intended GitHub account. Create a new repository named arezzo-gold-studio.
+   GitHub Free requires a public repository for Pages. Do not make unrelated repositories public.
+2. Extract this ZIP. Upload the extracted contents, including the icons folder, to the repository.
+   Upload the files, NOT this ZIP. index.html must be at the repository root, not inside a site folder.
+   Commit the upload to the main branch. There are no build commands or dependencies to install.
+3. Repository Settings > Pages > Build and deployment:
+   Source: Deploy from a branch. Branch: main. Folder: /(root). Save.
+   Use the published address shown by GitHub on that Pages screen; do not assume it is live yet.
+
+CHECKS AFTER PUBLISHING
+- Open the address in a normal browser and an incognito/private window to understand its visibility.
+- Confirm Settings, calculation, mobile layout, and Additional options work.
+- 20g / 14K / 35% at the default Store reference should calculate $4,000.
+- A What-if reference of $5,000/oz for that same piece should calculate $4,255.
+- Verify the live feed's source and quote time. A green result must be genuinely fresh.
+- Do not call live pricing finished until it has been tested on the hosted site.
+- Store pricing works from the locked reference even when feeds are unavailable.
+- Settings stay on each browser. Existing local-file settings do not automatically migrate to the
+  hosted origin; export them from the old app and import them into the hosted app when needed.
+- Home-screen installation needs testing on the intended phone after HTTPS hosting is active.
+
+VALIDATION IN THIS TURN
+The unchanged project passed 72 Node automated pricing/feed tests locally.
+These tests include mocked feed responses. They do NOT verify the hosted site or real external feeds.
+
+USAGE
+GitHub Pages restricts hosting online businesses, e-commerce, and commercial SaaS. Its documentation
+does not explicitly approve this specific internal pricing-calculator use. Confirm its suitability
+before relying on it as production business infrastructure. No checkout or payment processing is included.
+
+OFFICIAL DOCUMENTATION
+https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
+https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+https://docs.github.com/en/enterprise-cloud@latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site
+https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits

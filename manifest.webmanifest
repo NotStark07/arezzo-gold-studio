@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Arezzo Gold Studio",
+  "short_name": "Arezzo Gold",
+  "description": "Internal gold pricing: live information, controlled store prices.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f3ed",
+  "theme_color": "#243d32",
+  "lang": "en-US",
+  "categories": ["business", "finance"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

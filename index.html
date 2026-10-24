@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1d2925">
+  <meta name="description" content="Arezzo internal gold pricing calculator. Live market information with controlled store pricing.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Arezzo Gold">
+  <title>Arezzo | Gold Studio</title>
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="pricing.js"></script>
+  <script defer src="feeds.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#calculator">Skip to calculator</a>
+  <header class="header shell">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">A</div><div><div class="wordmark">AREZZO</div><div class="brand-sub">JEWELERS &nbsp; / &nbsp; GOLD STUDIO</div></div></div>
+    <div class="header-actions"><span class="version">VERSION 1.1.1</span><button class="quiet-button" id="install-button" type="button">Install app</button><button class="settings-button" id="settings-button" type="button" aria-haspopup="dialog">Settings <span aria-hidden="true">&#9881;</span></button></div>
+  </header>
+  <main class="shell">
+    <section class="intro"><div><div class="eyebrow">THE AREZZO PRICING DESK</div><h1>Live market. <em>Consistent pricing.</em></h1><p>Your gold value, replacement cost and customer price &mdash; clearly separated.</p></div><div class="policy-chip" id="policy-chip">Draft policy</div></section>
+    <section class="market-panel" aria-label="Live gold market">
+      <div class="market-leading"><div class="overline">GOLD &middot; USD / TROY OZ</div><div class="market-number" id="market-price">&mdash;</div><div class="feed-line"><span class="status-dot" id="market-dot"></span><span id="market-status">Connecting to price provider...</span></div></div>
+      <div class="market-metal"><div class="overline">10K GOLD CONTENT</div><div id="metal-10">&mdash;</div><small>per gram &middot; metal only</small></div>
+      <div class="market-metal"><div class="overline">14K GOLD CONTENT</div><div id="metal-14">&mdash;</div><small>per gram &middot; metal only</small></div>
+      <div class="market-metal"><div class="overline">18K GOLD CONTENT</div><div id="metal-18">&mdash;</div><small>per gram &middot; metal only</small></div>
+      <div class="market-footer"><span id="quote-time">Source: Gold API &middot; waiting for a timestamped quote</span><button id="refresh-button" type="button">Refresh quote <span aria-hidden="true">&#8635;</span></button></div>
+    </section>
+    <div id="feed-notice" class="notice" role="status" hidden></div>
+    <details class="feed-details"><summary>Connection details &amp; Kitco cross-check</summary><div class="feed-details-body"><p>Refreshes automatically while this page is open. Gold API is the primary source; XAUS is a backup connection and may share an upstream source. An old or failed quote never becomes a live price.</p><p><a href="https://www.kitco.com/price" target="_blank" rel="noopener noreferrer">Open Kitco for comparison</a> &middot; <a href="https://api.gold-api.com/price/XAU" target="_blank" rel="noopener noreferrer">Open primary feed</a> &middot; <a href="https://xaus.com/api/v1/spot?compact=1" target="_blank" rel="noopener noreferrer">Open backup feed</a></p><p>For a manual Kitco-based calculation, enter its USD-per-troy-ounce quote in What-if. This is manual, not a live Kitco integration.</p><pre id="feed-debug">Waiting for a connection attempt.</pre><button type="button" id="copy-feed-details" class="quiet-button">Copy connection details</button></div></details>
+    <div id="storage-warning" class="notice" hidden></div>
+    <div id="band-warning" class="notice" hidden></div>
+    <div class="workspace" id="calculator">
+      <section class="input-card card">
+        <div class="section-top"><span class="step">01</span><h2>Set your piece</h2><span class="small-pill">USD</span></div>
+        <div class="mode-switch" role="group" aria-label="Pricing source">
+          <button type="button" data-mode="store" aria-pressed="true">Store pricing</button>
+          <button type="button" data-mode="live" aria-pressed="false">Live estimate</button>
+          <button type="button" data-mode="manual" aria-pressed="false">What-if</button>
+        </div>
+        <div class="reference-note" id="reference-note">Store reference is locked.</div>
+        <div id="manual-row" class="manual-row" hidden><label for="manual-spot">Scenario gold reference <span>USD / troy oz</span></label><input id="manual-spot" type="number" inputmode="decimal" min="100" max="100000" step="0.01" value="5000"><small>Manual scenario only. This does not change your saved store reference.</small></div>
+        <div class="input-block"><label for="weight">Weight <span>grams</span></label><div class="number-wrap"><input id="weight" type="number" inputmode="decimal" value="20" min="0.01" max="10000" step="0.01" autocomplete="off"><span aria-hidden="true">g</span></div><small>20g example loaded. Replace with the actual item weight.</small></div>
+        <fieldset class="karat-block"><legend>Gold purity</legend><div class="karat-switch">
+          <label><input type="radio" name="karat" value="10"><span>10K<small>Provisional</small></span></label>
+          <label><input type="radio" name="karat" value="14" checked><span>14K<small>58.33% gold</small></span></label>
+          <label><input type="radio" name="karat" value="18"><span>18K<small>75% gold</small></span></label>
+        </div></fieldset>
+        <details class="advanced" id="additional-options"><summary>Additional options</summary><div class="advanced-fields">
+        <div class="input-block premium-block"><label for="premium">Landed supplier premium <span>% above gold value</span></label><div class="number-wrap"><input id="premium" type="number" inputmode="decimal" value="35" min="0" max="300" step="0.5"><span aria-hidden="true">%</span></div><small>Making, import and freight costs. <strong>Not your retail markup.</strong> <button id="reset-premium" class="text-button" type="button">Use saved default</button></small></div>
+        <label for="scope">Construction / pricing scope</label><select id="scope"><option value="solid">Ordinary, stone-free, nonbranded solid gold</option><option value="hollow">Hollow or semi-hollow</option><option value="branded">Branded, stone-set or bundled</option><option value="unknown">Construction not confirmed</option></select><label for="historical-cost">Actual historical cost <span>optional &middot; USD</span></label><input type="number" id="historical-cost" inputmode="decimal" min="0" step="0.01" placeholder="Not required to price the piece"><small>Used for the margin warning only. It does not change the rate card.</small></div></details>
+        <div class="scope-foot">Standard schedule: solid gold, 1g or more. Exceptions need review.</div>
+      </section>
+      <section class="result-column" aria-label="Pricing result">
+        <div class="result-card" id="result-card">
+          <div class="result-kicker"><span id="result-label">PROPOSED CUSTOMER PRICE</span><span id="result-mode" class="result-mode">STORE</span></div>
+          <div class="big-price" id="result-price" aria-live="polite">&mdash;</div>
+          <div class="result-sub"><strong id="effective-price">&mdash;</strong><span>effective price per gram</span></div>
+          <div class="result-rule"></div>
+          <p id="result-basis">The scan / online customer price, before sales tax.</p>
+          <div class="result-actions"><button id="copy-button" type="button" disabled>Copy price <span aria-hidden="true">&#8599;</span></button><span>Rounded up to <strong id="rounding-label">$5</strong><br>No discount built in</span></div>
+        </div>
+        <div id="input-error" class="notice danger" role="alert" hidden></div>
+        <div id="result-warnings" class="result-warnings" aria-live="polite"></div>
+        <div class="economics-card card"><div class="section-top"><span class="step">02</span><h2>Understand the price</h2></div><dl class="metric-list"><div><dt>Gold-content value <small>metal only</small></dt><dd id="gold-total">&mdash;</dd></div><div><dt>Estimated replacement cost <small id="cost-per-gram">&mdash;</small></dt><dd id="replacement-total">&mdash;</dd></div><div class="spread-row"><dt>Above replacement <small>before fees, service &amp; overhead</small></dt><dd><span id="spread-total">&mdash;</span><small id="spread-margin">&mdash;</small></dd></div><div id="historical-row" hidden><dt>Historical gross profit <small>before selling expenses</small></dt><dd id="historical-profit">&mdash;</dd></div></dl></div>
+      </section>
+    </div>
+    <section class="transparency card"><details id="math-details"><summary><span><span class="step">03</span> The calculation &amp; discount checks</span><span class="summary-hint">See the math</span></summary><div class="detail-content"><div class="calculation-grid"><div><h3>Two rates. One weight breakpoint.</h3><div id="formula-lines" class="formula-lines">Enter a valid piece to see the calculation.</div><p class="muted" id="adjustment-note"></p><p class="muted">Changing gold or the supplier premium passes through the change in estimated replacement cost. It does not multiply the entire retail price.</p></div><div><h3>Additional discounts &mdash; scenarios only</h3><div class="table-wrap"><table class="discount-table"><thead><tr><th>Discount</th><th>Customer pays</th><th>Replacement spread</th></tr></thead><tbody id="discount-body"></tbody></table></div><p class="muted">No discount is automatically applied. Your existing authorization rules still apply. Below the review margin is a warning, not an automatic repricing command.</p></div></div></div></details></section>
+    <section class="rate-section"><div class="rates-heading"><div><div class="eyebrow">THE SHARED RATE CARD</div><h2>One policy across your gold.</h2></div><p id="rate-reference">At the saved store reference.</p></div><div class="rate-cards" id="rate-cards"></div><p class="rate-disclaimer">Rates shown here use each karat's <strong>saved default supplier premium</strong>. Your piece above uses the premium you entered. No historical-cost multiplier and no automatic age markdown.</p></section>
+    <footer class="footer"><p><strong>Internal pricing tool.</strong> A formula estimate is not a guarantee of profit or market demand. No connection to The Edge; no automatic inventory or website updates.</p><div><span id="save-state">Settings stay on this browser. No cloud sync.</span><button type="button" class="text-button" id="help-button">Help &amp; sources</button></div></footer>
+  </main>
+  <dialog id="settings-dialog" aria-labelledby="settings-title"><form id="settings-form"><header class="dialog-header"><div><div class="eyebrow">MANAGEMENT SETTINGS</div><h2 id="settings-title">Your pricing policy</h2></div><button type="button" class="close-button" data-close="settings-dialog" aria-label="Close settings">&#215;</button></header><div class="dialog-content">
+    <div class="notice">Saved on this browser only. Export a settings file to use the same policy on another device. This is not a password-protected admin area.</div>
+    <label for="policy-name">Policy name</label><input id="policy-name" maxlength="64" required>
+    <div class="form-two"><div><label for="store-spot">Locked store reference <span>USD / troy oz</span></label><input id="store-spot" type="number" min="100" max="100000" step="0.01" required></div><div><label for="review-movement">Reference review trigger <span>USD / troy oz</span></label><input id="review-movement" type="number" min="50" max="10000" step="1" required></div></div>
+    <p class="muted">The live feed never changes this reference. A move of this size above or below it shows a review alert. Saving a new reference changes calculations on this browser only.</p>
+    <div class="form-two"><div><label for="breakpoint">First-tier weight <span>grams</span></label><input id="breakpoint" type="number" min="1" max="1000" step="0.1" required></div><div><label for="rounding">Round upward by <span>USD</span></label><input id="rounding" type="number" min="1" max="1000" step="1" required></div></div>
+    <div class="form-two"><div><label for="min-margin">Review margin <span>% before expenses</span></label><input id="min-margin" type="number" min="0" max="90" step="1" required></div><div><label for="stale-minutes">Quote freshness limit <span>minutes</span></label><input id="stale-minutes" type="number" min="1" max="30" step="1" required></div></div>
+    <h3>Saved supplier premiums</h3><div class="form-three" id="default-premiums"></div>
+    <details class="calibration-settings"><summary>Calibration &amp; base retail rates</summary><p class="notice">Prototype anchor: $4,500/oz with a 35% premium, not a claim about today's gold. Changing the calibration or rates changes the policy itself. To follow a new gold band, change the locked store reference above instead.</p><label for="calibration-spot">Gold reference at calibration <span>USD / troy oz</span></label><input id="calibration-spot" type="number" min="100" max="100000" step="0.01" required><div id="base-rates"></div><p class="muted">10K starts at $190/$150 provisionally: a rounded cost-adjusted extension of the 14K allowances at the prototype anchor. It is not a market-validated 10K recommendation.</p></details>
+    <label class="checkbox-line"><input type="checkbox" id="reviewed"><span>I have reviewed this reference and policy for use on this device.<small>This records your review; it does not validate market competitiveness or profitability.</small></span></label>
+    <p id="settings-error" class="notice danger" hidden role="alert"></p>
+    <div class="settings-file-actions"><button class="quiet-button" type="button" id="export-settings">Export saved settings</button><button class="quiet-button" type="button" id="import-settings">Import settings</button><input type="file" id="import-file" accept=".json,application/json" hidden><button type="button" class="text-button" id="reset-settings">Restore starting settings</button></div>
+  </div><footer class="dialog-footer"><button type="button" class="quiet-button" data-close="settings-dialog">Cancel</button><button class="primary-button" type="submit">Save on this device</button></footer></form></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><header class="dialog-header"><div><div class="eyebrow">AREZZO GOLD STUDIO</div><h2 id="help-title">A few things to know</h2></div><button type="button" class="close-button" data-close="help-dialog" aria-label="Close help">&#215;</button></header><div class="dialog-content help-content">
+    <h3>Three modes, no automatic repricing</h3><p><strong>Store pricing</strong> uses your locked reference and works offline after the hosted app has been cached. <strong>Live estimate</strong> requires a successful, fresh, timestamped quote. <strong>What-if</strong> uses your manually entered gold scenario.</p>
+    <h3>The formula</h3><p>Replacement per gram = (gold per troy oz / 31.1034768) &times; (karat / 24) &times; (1 + supplier premium / 100).</p><p>Adjusted rate = saved base retail rate + replacement per gram now &minus; replacement per gram at calibration. Charge the first-tier grams at the first rate and only the additional grams at the lower rate. Round the total up.</p>
+    <h3>Live-data safeguards</h3><p>The app requests Gold API's USD XAU quote about every 60 seconds while visible, then tries XAUS if the first source fails or is stale. Gold API requests are spaced by at least 30 seconds; XAUS requests by at least 60 seconds. Each request has a seven-second timeout. Provider timestamps and explicit stale flags determine freshness, never a newly generated response time alone. XAUS is a backup connection, not a guarantee of an independent upstream source. An old, failed or offline quote never silently becomes a live calculation. Connection details are visible above. Quotes are indicative, not settlement or trade-execution prices.</p>
+    <h3>Premium and profit</h3><p>Premium estimates supplier costs above intrinsic gold. It is not your retail margin. Amount above replacement is before fees, service, warranty, overhead and tax. This app does not establish realized profit or demand.</p>
+    <h3>Install &amp; privacy</h3><p>Once hosted on HTTPS, use your browser's Install app option, or Share &rarr; Add to Home Screen on a supporting phone. Local HTML files can calculate, but cannot install as an offline PWA.</p><p>Settings and cached quotes stay in this browser. They do not sync across devices. No inventory, customer records or analytics are included. Gold API and, when used, XAUS receive network requests and standard connection information; item weights, premiums, historical cost and calculated prices are not sent.</p><p>This version has no login. Hosting source in a private GitHub repository does not by itself make a Pages website private. Noindex is not access control. Do not publish confidential records or API secrets. Choose authenticated hosting before publishing an internal-only tool.</p>
+    <h3>Sources</h3><p><a href="https://gold-api.com/docs" target="_blank" rel="noopener noreferrer">Gold API documentation</a> &middot; <a href="https://xaus.com/api/" target="_blank" rel="noopener noreferrer">XAUS backup documentation</a> &middot; <a href="https://gold-api.com/terms" target="_blank" rel="noopener noreferrer">Provider terms</a><br><a href="https://www.gold.org/about-gold/about-gold-jewellery" target="_blank" rel="noopener noreferrer">World Gold Council: karat purity</a><br><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site" target="_blank" rel="noopener noreferrer">GitHub Pages visibility</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable" target="_blank" rel="noopener noreferrer">Browser app installation</a></p>
+  </div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript><p class="notice">JavaScript must be enabled for this calculator. No price is available without it.</p></noscript>
+</body>
+</html>
